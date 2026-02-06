@@ -85,7 +85,6 @@ public class GameFlowManager : MonoBehaviour
         if (scoreManager != null)
         {
             leaderboardManager?.RecordScore(scoreManager.Score);
-            scoreManager.ResetScore();
             scoreManager.SetScoringEnabled(false);
         }
 
