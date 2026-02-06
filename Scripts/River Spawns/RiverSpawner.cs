@@ -38,6 +38,9 @@ public sealed class RiverSpawner : MonoBehaviour
     [Header("Safety")]
     [SerializeField] private int maxAliveObjects = 50;
 
+    [Header("Game Flow")]
+    [SerializeField] private GameFlowManager gameFlowManager;
+
     private float elapsed;
     private float nextSpawnTimer;
     private int aliveCount;
@@ -59,6 +62,11 @@ public sealed class RiverSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         if (this.spawnLine == null || this.despawnLine == null)
         {
             return;
@@ -200,5 +208,10 @@ public sealed class RiverSpawner : MonoBehaviour
         {
             this.aliveCount = 0;
         }
+    }
+
+    private bool IsGameRunning()
+    {
+        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
