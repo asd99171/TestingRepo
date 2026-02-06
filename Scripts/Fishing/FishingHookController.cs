@@ -27,6 +27,8 @@ public sealed class FishingHookController : MonoBehaviour
     [Header("Scoring")]
     [SerializeField] private int wildlifePenalty = 150;
     [SerializeField] private int perfectBonus = 50;
+    [SerializeField] private int evidenceScore = 1;
+    [SerializeField] private int corpseScore = 10;
 
     private readonly List<HookableObject> inRange = new List<HookableObject>();
     private int fallbackScore;
