@@ -212,6 +212,6 @@ public sealed class RiverSpawner : MonoBehaviour
 
     private bool IsGameRunning()
     {
-        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
+        return this.gameFlowManager == null || this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
