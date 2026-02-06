@@ -12,6 +12,9 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Transform hookTransform;
     [SerializeField] private RingQTEController qteController;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private CatchCounterManager catchCounterManager;
+    [SerializeField] private GameFlowManager gameFlowManager;
 
     [Header("Player Horizontal Move")]
     [SerializeField] private float playerSpeed = 6.0f;
@@ -24,12 +27,19 @@ public sealed class FishingHookController : MonoBehaviour
     [Header("Scoring")]
     [SerializeField] private int wildlifePenalty = 150;
     [SerializeField] private int perfectBonus = 50;
+    [SerializeField] private int evidenceScore = 1;
+    [SerializeField] private int corpseScore = 10;
 
     private readonly List<HookableObject> inRange = new List<HookableObject>();
-    private int score;
+    private int fallbackScore;
 
     private void Awake()
     {
+        if (this.gameFlowManager == null)
+        {
+            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
+        }
+
         if (this.playerTransform == null)
         {
             this.playerTransform = this.transform.root;
@@ -81,6 +91,11 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void Update()
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         Vector2 move = Vector2.zero;
 
         if (this.moveAction != null)
@@ -94,6 +109,11 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         if (this.qteController != null && this.qteController.IsBusy())
         {
             this.qteController.Press();
@@ -206,10 +226,29 @@ public sealed class FishingHookController : MonoBehaviour
             Debug.Log("REEL FAILED -> Losing item: " + target.name);
             target.MarkUnhookableAndFail();
             this.RemoveFromRange(target);
+            this.scoreManager?.ResetCombo();
             return;
         }
 
         int gained = target.BaseScore;
+
+        if (target.GrantsEvidence)
+        {
+            if (target.EvidenceType == EvidenceType.Corpse)
+            {
+                gained = this.corpseScore;
+                this.catchCounterManager?.AddCatch(CatchType.Corpse);
+            }
+            else
+            {
+                gained = this.evidenceScore;
+                this.catchCounterManager?.AddCatch(CatchType.Evidence);
+            }
+        }
+        else
+        {
+            this.catchCounterManager?.AddCatch(CatchType.Fish);
+        }
 
         if (result == RingQTEResult.Perfect)
         {
@@ -221,9 +260,17 @@ public sealed class FishingHookController : MonoBehaviour
             gained = -this.wildlifePenalty;
         }
 
-        this.score += gained;
+        if (this.scoreManager != null)
+        {
+            this.scoreManager.AddScore(gained);
+        }
+        else
+        {
+            this.fallbackScore += gained;
+        }
 
-        Debug.Log("REEL SUCCESS (" + result + ") -> +" + gained + " points | Total: " + this.score);
+        int totalScore = this.scoreManager != null ? this.scoreManager.Score : this.fallbackScore;
+        Debug.Log("REEL SUCCESS (" + result + ") -> +" + gained + " points | Total: " + totalScore);
 
         target.Consume();
         this.RemoveFromRange(target);
@@ -264,5 +311,10 @@ public sealed class FishingHookController : MonoBehaviour
         }
 
         this.RemoveFromRange(hookable);
+    }
+
+    private bool IsGameRunning()
+    {
+        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
