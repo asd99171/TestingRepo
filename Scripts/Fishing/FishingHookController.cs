@@ -35,11 +35,6 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void Awake()
     {
-        if (this.gameFlowManager == null)
-        {
-            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
-        }
-
         if (this.playerTransform == null)
         {
             this.playerTransform = this.transform.root;
@@ -232,11 +227,6 @@ public sealed class FishingHookController : MonoBehaviour
 
         int gained = target.BaseScore;
 
-        if (target.GrantsEvidence)
-        {
-            gained = target.EvidenceType == EvidenceType.Corpse ? this.corpseScore : this.evidenceScore;
-        }
-
         if (result == RingQTEResult.Perfect)
         {
             gained += this.perfectBonus;
@@ -307,6 +297,6 @@ public sealed class FishingHookController : MonoBehaviour
 
     private bool IsGameRunning()
     {
-        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
+        return this.gameFlowManager == null || this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
