@@ -14,6 +14,9 @@ public sealed class RiverDriftMover : MonoBehaviour
     [SerializeField] private bool allowSpin = true;
     [SerializeField] private float spinDegPerSec = 40f;
 
+    [Header("Game Flow")]
+    [SerializeField] private GameFlowManager gameFlowManager;
+
     private Vector2 velocity;
     private float bobOffset;
     private float bobPhase;
@@ -34,6 +37,11 @@ public sealed class RiverDriftMover : MonoBehaviour
 
     private void Update()
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         float dt = Time.deltaTime;
 
         Vector3 pos = this.transform.position;
@@ -56,5 +64,10 @@ public sealed class RiverDriftMover : MonoBehaviour
         this.baseVelocity = v;
         float jitter = Random.Range(1f - this.speedJitterPercent, 1f + this.speedJitterPercent);
         this.velocity = this.baseVelocity * jitter;
+    }
+
+    private bool IsGameRunning()
+    {
+        return this.gameFlowManager == null || this.gameFlowManager.CurrentState == GameState.Running;
     }
 }

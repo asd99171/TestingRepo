@@ -21,6 +21,8 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI knifeEvidenceText;
     [SerializeField] private TextMeshProUGUI corpseEvidenceText;
     [SerializeField] private GameObject gameFlowPanel;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button endButton;
 
     private void OnEnable()
     {
@@ -42,12 +44,22 @@ public class GameUIController : MonoBehaviour
 
         if (leaderboardManager != null)
         {
-            leaderboardManager.LeaderboardChanged += HandleLeaderboardChanged;
+            leaderboardManager.BestScoreChanged += HandleBestScoreChanged;
         }
 
         if (evidenceCounterManager != null)
         {
             evidenceCounterManager.EvidenceCountChanged += HandleEvidenceCountChanged;
+        }
+
+        if (startButton != null)
+        {
+            startButton.onClick.AddListener(HandleStartButtonClicked);
+        }
+
+        if (endButton != null)
+        {
+            endButton.onClick.AddListener(HandleEndButtonClicked);
         }
     }
 
@@ -71,12 +83,22 @@ public class GameUIController : MonoBehaviour
 
         if (leaderboardManager != null)
         {
-            leaderboardManager.LeaderboardChanged -= HandleLeaderboardChanged;
+            leaderboardManager.BestScoreChanged -= HandleBestScoreChanged;
         }
 
         if (evidenceCounterManager != null)
         {
             evidenceCounterManager.EvidenceCountChanged -= HandleEvidenceCountChanged;
+        }
+
+        if (startButton != null)
+        {
+            startButton.onClick.RemoveListener(HandleStartButtonClicked);
+        }
+
+        if (endButton != null)
+        {
+            endButton.onClick.RemoveListener(HandleEndButtonClicked);
         }
     }
 
@@ -100,7 +122,7 @@ public class GameUIController : MonoBehaviour
 
         if (leaderboardManager != null)
         {
-            HandleLeaderboardChanged(leaderboardManager.Scores);
+            HandleBestScoreChanged(leaderboardManager.BestScore);
         }
 
         if (evidenceCounterManager != null)
@@ -156,26 +178,14 @@ public class GameUIController : MonoBehaviour
         }
     }
 
-    private void HandleLeaderboardChanged(System.Collections.Generic.IReadOnlyList<int> scores)
+    private void HandleBestScoreChanged(int bestScore)
     {
         if (leaderboardText == null)
         {
             return;
         }
 
-        if (scores.Count == 0)
-        {
-            leaderboardText.text = "Leaderboard: -";
-            return;
-        }
-
-        string leaderboardOutput = "Leaderboard";
-        for (int i = 0; i < scores.Count; i++)
-        {
-            leaderboardOutput += $"\n{i + 1}. {scores[i]}";
-        }
-
-        leaderboardText.text = leaderboardOutput;
+        leaderboardText.text = $"Best: {bestScore}";
     }
 
     private void HandleEvidenceCountChanged(EvidenceType type, int count)
@@ -213,5 +223,15 @@ public class GameUIController : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void HandleStartButtonClicked()
+    {
+        gameFlowManager?.StartGame();
+    }
+
+    private void HandleEndButtonClicked()
+    {
+        gameFlowManager?.EndGame();
     }
 }
