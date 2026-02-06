@@ -16,6 +16,9 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private Image timerBarFill;
     [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private TextMeshProUGUI leaderboardText;
+    [SerializeField] private TextMeshProUGUI evidenceCountText;
+    [SerializeField] private TextMeshProUGUI fishCountText;
+    [SerializeField] private TextMeshProUGUI corpseCountText;
     [SerializeField] private TextMeshProUGUI gunEvidenceText;
     [SerializeField] private TextMeshProUGUI gloveEvidenceText;
     [SerializeField] private TextMeshProUGUI bagEvidenceText;
@@ -133,6 +136,13 @@ public class GameUIController : MonoBehaviour
             HandleEvidenceCountChanged(EvidenceType.Bag, evidenceCounterManager.BagCount);
             HandleEvidenceCountChanged(EvidenceType.Knife, evidenceCounterManager.KnifeCount);
             HandleEvidenceCountChanged(EvidenceType.Corpse, evidenceCounterManager.CorpseCount);
+        }
+
+        if (catchCounterManager != null)
+        {
+            HandleCatchCountChanged(CatchType.Fish, catchCounterManager.FishCount);
+            HandleCatchCountChanged(CatchType.Evidence, catchCounterManager.EvidenceCount);
+            HandleCatchCountChanged(CatchType.Corpse, catchCounterManager.CorpseCount);
         }
     }
 
