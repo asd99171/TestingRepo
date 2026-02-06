@@ -6,6 +6,7 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private TimerManager timerManager;
     [SerializeField] private LeaderboardManager leaderboardManager;
+    [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private CatchCounterManager catchCounterManager;
 
     public event Action<GameState> StateChanged;
@@ -22,6 +23,11 @@ public class GameFlowManager : MonoBehaviour
         if (scoreManager != null)
         {
             scoreManager.SetScoringEnabled(false);
+        }
+
+        if (evidenceCounterManager != null)
+        {
+            evidenceCounterManager.SetCountingEnabled(false);
         }
 
         if (catchCounterManager != null)
@@ -60,6 +66,8 @@ public class GameFlowManager : MonoBehaviour
 
         scoreManager?.ResetScore();
         scoreManager?.SetScoringEnabled(true);
+        evidenceCounterManager?.ResetCounts();
+        evidenceCounterManager?.SetCountingEnabled(true);
         catchCounterManager?.ResetCounts();
         catchCounterManager?.SetCountingEnabled(true);
         timerManager?.StartTimer();
@@ -79,6 +87,11 @@ public class GameFlowManager : MonoBehaviour
             leaderboardManager?.RecordScore(scoreManager.Score);
             scoreManager.ResetScore();
             scoreManager.SetScoringEnabled(false);
+        }
+
+        if (evidenceCounterManager != null)
+        {
+            evidenceCounterManager.SetCountingEnabled(false);
         }
 
         if (catchCounterManager != null)

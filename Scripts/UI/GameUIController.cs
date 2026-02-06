@@ -8,7 +8,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private TimerManager timerManager;
     [SerializeField] private GameFlowManager gameFlowManager;
     [SerializeField] private LeaderboardManager leaderboardManager;
-    [SerializeField] private CatchCounterManager catchCounterManager;
+    [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -19,6 +19,11 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI evidenceCountText;
     [SerializeField] private TextMeshProUGUI fishCountText;
     [SerializeField] private TextMeshProUGUI corpseCountText;
+    [SerializeField] private TextMeshProUGUI gunEvidenceText;
+    [SerializeField] private TextMeshProUGUI gloveEvidenceText;
+    [SerializeField] private TextMeshProUGUI bagEvidenceText;
+    [SerializeField] private TextMeshProUGUI knifeEvidenceText;
+    [SerializeField] private TextMeshProUGUI corpseEvidenceText;
     [SerializeField] private GameObject gameFlowPanel;
     [SerializeField] private Button startButton;
     [SerializeField] private Button endButton;
@@ -46,9 +51,9 @@ public class GameUIController : MonoBehaviour
             leaderboardManager.BestScoreChanged += HandleBestScoreChanged;
         }
 
-        if (catchCounterManager != null)
+        if (evidenceCounterManager != null)
         {
-            catchCounterManager.CatchCountChanged += HandleCatchCountChanged;
+            evidenceCounterManager.EvidenceCountChanged += HandleEvidenceCountChanged;
         }
 
         if (startButton != null)
@@ -85,9 +90,9 @@ public class GameUIController : MonoBehaviour
             leaderboardManager.BestScoreChanged -= HandleBestScoreChanged;
         }
 
-        if (catchCounterManager != null)
+        if (evidenceCounterManager != null)
         {
-            catchCounterManager.CatchCountChanged -= HandleCatchCountChanged;
+            evidenceCounterManager.EvidenceCountChanged -= HandleEvidenceCountChanged;
         }
 
         if (startButton != null)
@@ -124,9 +129,20 @@ public class GameUIController : MonoBehaviour
             HandleBestScoreChanged(leaderboardManager.BestScore);
         }
 
+        if (evidenceCounterManager != null)
+        {
+            HandleEvidenceCountChanged(EvidenceType.Gun, evidenceCounterManager.GunCount);
+            HandleEvidenceCountChanged(EvidenceType.Glove, evidenceCounterManager.GloveCount);
+            HandleEvidenceCountChanged(EvidenceType.Bag, evidenceCounterManager.BagCount);
+            HandleEvidenceCountChanged(EvidenceType.Knife, evidenceCounterManager.KnifeCount);
+            HandleEvidenceCountChanged(EvidenceType.Corpse, evidenceCounterManager.CorpseCount);
+        }
+
         if (catchCounterManager != null)
         {
-            UpdateCatchCountTexts();
+            HandleCatchCountChanged(CatchType.Fish, catchCounterManager.FishCount);
+            HandleCatchCountChanged(CatchType.Evidence, catchCounterManager.EvidenceCount);
+            HandleCatchCountChanged(CatchType.Corpse, catchCounterManager.CorpseCount);
         }
     }
 
@@ -188,51 +204,40 @@ public class GameUIController : MonoBehaviour
         leaderboardText.text = $"Best: {bestScore}";
     }
 
-    private void HandleCatchCountChanged(CatchType type, int count)
+    private void HandleEvidenceCountChanged(EvidenceType type, int count)
     {
         switch (type)
         {
-            case CatchType.Fish:
-                if (fishCountText != null)
+            case EvidenceType.Gun:
+                if (gunEvidenceText != null)
                 {
-                    fishCountText.text = $"Fish: {count}";
+                    gunEvidenceText.text = $"Gun: {count}";
                 }
                 break;
-            case CatchType.Evidence:
-                if (evidenceCountText != null)
+            case EvidenceType.Glove:
+                if (gloveEvidenceText != null)
                 {
-                    evidenceCountText.text = $"Evidence: {count}";
+                    gloveEvidenceText.text = $"Glove: {count}";
                 }
                 break;
-            case CatchType.Corpse:
-                if (corpseCountText != null)
+            case EvidenceType.Bag:
+                if (bagEvidenceText != null)
                 {
-                    corpseCountText.text = $"Corpse: {count}";
+                    bagEvidenceText.text = $"Bag: {count}";
                 }
                 break;
-        }
-    }
-
-    private void UpdateCatchCountTexts()
-    {
-        if (catchCounterManager == null)
-        {
-            return;
-        }
-
-        if (fishCountText != null)
-        {
-            fishCountText.text = $"Fish: {catchCounterManager.FishCount}";
-        }
-
-        if (evidenceCountText != null)
-        {
-            evidenceCountText.text = $"Evidence: {catchCounterManager.EvidenceCount}";
-        }
-
-        if (corpseCountText != null)
-        {
-            corpseCountText.text = $"Corpse: {catchCounterManager.CorpseCount}";
+            case EvidenceType.Knife:
+                if (knifeEvidenceText != null)
+                {
+                    knifeEvidenceText.text = $"Knife: {count}";
+                }
+                break;
+            case EvidenceType.Corpse:
+                if (corpseEvidenceText != null)
+                {
+                    corpseEvidenceText.text = $"Corpse: {count}";
+                }
+                break;
         }
     }
 

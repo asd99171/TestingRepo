@@ -13,7 +13,7 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private Transform hookTransform;
     [SerializeField] private RingQTEController qteController;
     [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private CatchCounterManager catchCounterManager;
+    [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private GameFlowManager gameFlowManager;
 
     [Header("Player Horizontal Move")]
@@ -35,11 +35,6 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void Awake()
     {
-        if (this.gameFlowManager == null)
-        {
-            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
-        }
-
         if (this.playerTransform == null)
         {
             this.playerTransform = this.transform.root;
@@ -232,24 +227,6 @@ public sealed class FishingHookController : MonoBehaviour
 
         int gained = target.BaseScore;
 
-        if (target.GrantsEvidence)
-        {
-            if (target.EvidenceType == EvidenceType.Corpse)
-            {
-                gained = this.corpseScore;
-                this.catchCounterManager?.AddCatch(CatchType.Corpse);
-            }
-            else
-            {
-                gained = this.evidenceScore;
-                this.catchCounterManager?.AddCatch(CatchType.Evidence);
-            }
-        }
-        else
-        {
-            this.catchCounterManager?.AddCatch(CatchType.Fish);
-        }
-
         if (result == RingQTEResult.Perfect)
         {
             gained += this.perfectBonus;
@@ -267,6 +244,11 @@ public sealed class FishingHookController : MonoBehaviour
         else
         {
             this.fallbackScore += gained;
+        }
+
+        if (this.evidenceCounterManager != null && target.GrantsEvidence)
+        {
+            this.evidenceCounterManager.AddEvidence(target.EvidenceType);
         }
 
         int totalScore = this.scoreManager != null ? this.scoreManager.Score : this.fallbackScore;
@@ -315,6 +297,6 @@ public sealed class FishingHookController : MonoBehaviour
 
     private bool IsGameRunning()
     {
-        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
+        return this.gameFlowManager == null || this.gameFlowManager.CurrentState == GameState.Running;
     }
 }

@@ -47,11 +47,6 @@ public sealed class RiverSpawner : MonoBehaviour
 
     private void Awake()
     {
-        if (this.gameFlowManager == null)
-        {
-            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
-        }
-
         if (this.spawnLine == null)
         {
             Debug.LogError("RiverSpawner: spawnLine is not set.");
@@ -63,22 +58,6 @@ public sealed class RiverSpawner : MonoBehaviour
         }
 
         this.nextSpawnTimer = 0.2f;
-    }
-
-    private void OnEnable()
-    {
-        if (this.gameFlowManager != null)
-        {
-            this.gameFlowManager.StateChanged += this.HandleStateChanged;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (this.gameFlowManager != null)
-        {
-            this.gameFlowManager.StateChanged -= this.HandleStateChanged;
-        }
     }
 
     private void Update()
@@ -231,32 +210,8 @@ public sealed class RiverSpawner : MonoBehaviour
         }
     }
 
-    private void HandleStateChanged(GameState state)
-    {
-        if (state == GameState.Running)
-        {
-            this.ClearExistingObjects();
-        }
-    }
-
-    private void ClearExistingObjects()
-    {
-        HookableObject[] hookables = FindObjectsOfType<HookableObject>(true);
-        for (int i = 0; i < hookables.Length; i++)
-        {
-            if (hookables[i] != null)
-            {
-                Destroy(hookables[i].gameObject);
-            }
-        }
-
-        this.aliveCount = 0;
-        this.elapsed = 0f;
-        this.nextSpawnTimer = 0.2f;
-    }
-
     private bool IsGameRunning()
     {
-        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
+        return this.gameFlowManager == null || this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
