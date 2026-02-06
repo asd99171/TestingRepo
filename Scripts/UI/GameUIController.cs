@@ -10,6 +10,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private Image timerBarFill;
@@ -140,6 +141,11 @@ public class GameUIController : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = $"Score: {newScore}";
+        }
+
+        if (currentScoreText != null)
+        {
+            currentScoreText.text = $"Current: {newScore}";
         }
     }
 
