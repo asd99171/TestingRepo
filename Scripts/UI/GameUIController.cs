@@ -57,6 +57,11 @@ public class GameUIController : MonoBehaviour
             evidenceCounterManager.EvidenceCountChanged += HandleEvidenceCountChanged;
         }
 
+        if (catchCounterManager != null)
+        {
+            catchCounterManager.CatchCountChanged += HandleCatchCountChanged;
+        }
+
         if (startButton != null)
         {
             startButton.onClick.AddListener(HandleStartButtonClicked);
@@ -94,6 +99,11 @@ public class GameUIController : MonoBehaviour
         if (evidenceCounterManager != null)
         {
             evidenceCounterManager.EvidenceCountChanged -= HandleEvidenceCountChanged;
+        }
+
+        if (catchCounterManager != null)
+        {
+            catchCounterManager.CatchCountChanged -= HandleCatchCountChanged;
         }
 
         if (startButton != null)
@@ -247,21 +257,21 @@ public class GameUIController : MonoBehaviour
         switch (type)
         {
             case CatchType.Evidence:
-                if (gunEvidenceText != null)
+                if (evidenceCountText != null)
                 {
-                    gunEvidenceText.text = $"Evidence: {count}";
+                    evidenceCountText.text = $"Evidence: {count}";
                 }
                 break;
             case CatchType.Fish:
-                if (gloveEvidenceText != null)
+                if (fishCountText != null)
                 {
-                    gloveEvidenceText.text = $"Fish: {count}";
+                    fishCountText.text = $"Fish: {count}";
                 }
                 break;
             case CatchType.Corpse:
-                if (bagEvidenceText != null)
+                if (corpseCountText != null)
                 {
-                    bagEvidenceText.text = $"Corpse: {count}";
+                    corpseCountText.text = $"Corpse: {count}";
                 }
                 break;
         }
