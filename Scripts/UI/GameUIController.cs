@@ -9,7 +9,6 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameFlowManager gameFlowManager;
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
-    [SerializeField] private CatchCounterManager catchCounterManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -57,11 +56,6 @@ public class GameUIController : MonoBehaviour
             evidenceCounterManager.EvidenceCountChanged += HandleEvidenceCountChanged;
         }
 
-        if (catchCounterManager != null)
-        {
-            catchCounterManager.CatchCountChanged += HandleCatchCountChanged;
-        }
-
         if (startButton != null)
         {
             startButton.onClick.AddListener(HandleStartButtonClicked);
@@ -99,11 +93,6 @@ public class GameUIController : MonoBehaviour
         if (evidenceCounterManager != null)
         {
             evidenceCounterManager.EvidenceCountChanged -= HandleEvidenceCountChanged;
-        }
-
-        if (catchCounterManager != null)
-        {
-            catchCounterManager.CatchCountChanged -= HandleCatchCountChanged;
         }
 
         if (startButton != null)
@@ -247,31 +236,6 @@ public class GameUIController : MonoBehaviour
                 if (corpseEvidenceText != null)
                 {
                     corpseEvidenceText.text = $"Corpse: {count}";
-                }
-                break;
-        }
-    }
-
-    private void HandleCatchCountChanged(CatchType type, int count)
-    {
-        switch (type)
-        {
-            case CatchType.Fish:
-                if (fishCountText != null)
-                {
-                    fishCountText.text = $"Fish: {count}";
-                }
-                break;
-            case CatchType.Evidence:
-                if (evidenceCountText != null)
-                {
-                    evidenceCountText.text = $"Evidence: {count}";
-                }
-                break;
-            case CatchType.Corpse:
-                if (corpseCountText != null)
-                {
-                    corpseCountText.text = $"Corpse: {count}";
                 }
                 break;
         }

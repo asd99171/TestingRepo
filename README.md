@@ -26,19 +26,3 @@ The leaderboard HUD shows only the best score. To make it update:
    - The UI will render `Best: {score}` when the best score changes.
 
 If `LeaderboardManager` is not assigned to both the game flow and UI controllers, the best score text will not update.
-
-## Catch counter setup
-To show how many Fish, Evidence, and Corpse items were caught:
-
-1. **Scene wiring**
-   - Assign the scene's `CatchCounterManager` to:
-     - `GameFlowManager.catchCounterManager` (so counts reset and enable with the round)
-     - `FishingHookController.catchCounterManager` (so catches are recorded)
-     - `GameUIController.catchCounterManager` (so the UI listens for count changes)
-2. **UI text**
-   - Assign `TextMeshProUGUI` components to:
-     - `GameUIController.fishCountText`
-     - `GameUIController.evidenceCountText`
-     - `GameUIController.corpseCountText`
-
-If any of these references are missing, the catch count labels will not update.
