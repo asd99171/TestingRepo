@@ -8,6 +8,7 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private CatchCounterManager catchCounterManager;
+    [SerializeField] private RiverSpawner[] riverSpawners;
 
     public event Action<GameState> StateChanged;
 
@@ -103,6 +104,7 @@ public class GameFlowManager : MonoBehaviour
     public void RestartGame()
     {
         EndGame();
+        DespawnAllHookables();
         StartGame();
     }
 
@@ -120,6 +122,23 @@ public class GameFlowManager : MonoBehaviour
         if (CurrentState == GameState.Running)
         {
             EndGame();
+        }
+    }
+
+    private void DespawnAllHookables()
+    {
+        if (riverSpawners == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < riverSpawners.Length; i++)
+        {
+            RiverSpawner spawner = riverSpawners[i];
+            if (spawner != null)
+            {
+                spawner.DespawnAllActive();
+            }
         }
     }
 
