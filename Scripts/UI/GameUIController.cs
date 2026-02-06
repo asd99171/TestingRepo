@@ -9,6 +9,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameFlowManager gameFlowManager;
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
+    [SerializeField] private CatchCounterManager catchCounterManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -240,6 +241,32 @@ public class GameUIController : MonoBehaviour
                 break;
         }
     }
+
+    private void HandleCatchCountChanged(CatchType type, int count)
+    {
+        switch (type)
+        {
+            case CatchType.Evidence:
+                if (gunEvidenceText != null)
+                {
+                    gunEvidenceText.text = $"Evidence: {count}";
+                }
+                break;
+            case CatchType.Fish:
+                if (gloveEvidenceText != null)
+                {
+                    gloveEvidenceText.text = $"Fish: {count}";
+                }
+                break;
+            case CatchType.Corpse:
+                if (bagEvidenceText != null)
+                {
+                    bagEvidenceText.text = $"Corpse: {count}";
+                }
+                break;
+        }
+    }
+
 
     private void HandleStartButtonClicked()
     {
