@@ -25,6 +25,10 @@ public sealed class HookableObject : MonoBehaviour
     [Header("Scoring")]
     [SerializeField] private int baseScore = 100;
 
+    [Header("Evidence")]
+    [SerializeField] private bool grantsEvidence = false;
+    [SerializeField] private EvidenceType evidenceType = EvidenceType.Gun;
+
     [Header("Hooking")]
     [SerializeField] private bool isHookable = true;
 
@@ -53,6 +57,16 @@ public sealed class HookableObject : MonoBehaviour
     public int BaseScore
     {
         get { return this.baseScore; }
+    }
+
+    public bool GrantsEvidence
+    {
+        get { return this.grantsEvidence; }
+    }
+
+    public EvidenceType EvidenceType
+    {
+        get { return this.evidenceType; }
     }
 
     public bool IsHookable

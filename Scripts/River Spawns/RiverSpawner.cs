@@ -38,12 +38,20 @@ public sealed class RiverSpawner : MonoBehaviour
     [Header("Safety")]
     [SerializeField] private int maxAliveObjects = 50;
 
+    [Header("Game Flow")]
+    [SerializeField] private GameFlowManager gameFlowManager;
+
     private float elapsed;
     private float nextSpawnTimer;
     private int aliveCount;
 
     private void Awake()
     {
+        if (this.gameFlowManager == null)
+        {
+            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
+        }
+
         if (this.spawnLine == null)
         {
             Debug.LogError("RiverSpawner: spawnLine is not set.");
@@ -57,8 +65,29 @@ public sealed class RiverSpawner : MonoBehaviour
         this.nextSpawnTimer = 0.2f;
     }
 
+    private void OnEnable()
+    {
+        if (this.gameFlowManager != null)
+        {
+            this.gameFlowManager.StateChanged += this.HandleStateChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (this.gameFlowManager != null)
+        {
+            this.gameFlowManager.StateChanged -= this.HandleStateChanged;
+        }
+    }
+
     private void Update()
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         if (this.spawnLine == null || this.despawnLine == null)
         {
             return;
@@ -200,5 +229,34 @@ public sealed class RiverSpawner : MonoBehaviour
         {
             this.aliveCount = 0;
         }
+    }
+
+    private void HandleStateChanged(GameState state)
+    {
+        if (state == GameState.Running)
+        {
+            this.ClearExistingObjects();
+        }
+    }
+
+    private void ClearExistingObjects()
+    {
+        HookableObject[] hookables = FindObjectsOfType<HookableObject>();
+        for (int i = 0; i < hookables.Length; i++)
+        {
+            if (hookables[i] != null)
+            {
+                Destroy(hookables[i].gameObject);
+            }
+        }
+
+        this.aliveCount = 0;
+        this.elapsed = 0f;
+        this.nextSpawnTimer = 0.2f;
+    }
+
+    private bool IsGameRunning()
+    {
+        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
     }
 }
