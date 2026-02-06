@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -12,6 +13,8 @@ public sealed class SpawnEntry
 
 public sealed class RiverSpawner : MonoBehaviour
 {
+    private readonly List<RiverDespawn> aliveObjects = new List<RiverDespawn>();
+
     [Header("Spawn/Despawn Lines")]
     [SerializeField] private Transform spawnLine;
     [SerializeField] private Transform despawnLine;
@@ -132,6 +135,7 @@ public sealed class RiverSpawner : MonoBehaviour
         }
 
         despawn.Init(this, this.despawnLine.position.x);
+        this.aliveObjects.Add(despawn);
     }
 
     private GameObject PickWeightedPrefab()
@@ -203,23 +207,30 @@ public sealed class RiverSpawner : MonoBehaviour
     // Called by RiverDespawn
     public void NotifyDespawned(RiverDespawn despawn)
     {
+        if (despawn != null)
+        {
+            this.aliveObjects.Remove(despawn);
+        }
+
         if (this.aliveCount > 0)
         {
             this.aliveCount -= 1;
         }
     }
 
-    public static void DespawnAllInScene()
+    public void DespawnAllActive()
     {
-        RiverDespawn[] despawns = FindObjectsOfType<RiverDespawn>();
-        for (int i = 0; i < despawns.Length; i++)
+        for (int i = this.aliveObjects.Count - 1; i >= 0; i--)
         {
-            RiverDespawn despawn = despawns[i];
+            RiverDespawn despawn = this.aliveObjects[i];
             if (despawn != null)
             {
-                despawn.DespawnNow();
+                Destroy(despawn.gameObject);
             }
         }
+
+        this.aliveObjects.Clear();
+        this.aliveCount = 0;
     }
 
     private bool IsGameRunning()

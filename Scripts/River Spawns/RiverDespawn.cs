@@ -15,13 +15,8 @@ public sealed class RiverDespawn : MonoBehaviour
     {
         if (this.transform.position.x <= this.despawnX)
         {
-            DespawnNow();
+            this.owner?.NotifyDespawned(this);
+            Destroy(this.gameObject);
         }
-    }
-
-    public void DespawnNow()
-    {
-        this.owner?.NotifyDespawned(this);
-        Destroy(this.gameObject);
     }
 }
