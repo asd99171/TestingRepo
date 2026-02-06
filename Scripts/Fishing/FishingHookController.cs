@@ -12,6 +12,9 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Transform hookTransform;
     [SerializeField] private RingQTEController qteController;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private EvidenceCounterManager evidenceCounterManager;
+    [SerializeField] private GameFlowManager gameFlowManager;
 
     [Header("Player Horizontal Move")]
     [SerializeField] private float playerSpeed = 6.0f;
@@ -26,7 +29,7 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private int perfectBonus = 50;
 
     private readonly List<HookableObject> inRange = new List<HookableObject>();
-    private int score;
+    private int fallbackScore;
 
     private void Awake()
     {
@@ -81,6 +84,11 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void Update()
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         Vector2 move = Vector2.zero;
 
         if (this.moveAction != null)
@@ -94,6 +102,11 @@ public sealed class FishingHookController : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        if (!this.IsGameRunning())
+        {
+            return;
+        }
+
         if (this.qteController != null && this.qteController.IsBusy())
         {
             this.qteController.Press();
@@ -206,6 +219,7 @@ public sealed class FishingHookController : MonoBehaviour
             Debug.Log("REEL FAILED -> Losing item: " + target.name);
             target.MarkUnhookableAndFail();
             this.RemoveFromRange(target);
+            this.scoreManager?.ResetCombo();
             return;
         }
 
@@ -221,9 +235,22 @@ public sealed class FishingHookController : MonoBehaviour
             gained = -this.wildlifePenalty;
         }
 
-        this.score += gained;
+        if (this.scoreManager != null)
+        {
+            this.scoreManager.AddScore(gained);
+        }
+        else
+        {
+            this.fallbackScore += gained;
+        }
 
-        Debug.Log("REEL SUCCESS (" + result + ") -> +" + gained + " points | Total: " + this.score);
+        if (this.evidenceCounterManager != null && target.GrantsEvidence)
+        {
+            this.evidenceCounterManager.AddEvidence(target.EvidenceType);
+        }
+
+        int totalScore = this.scoreManager != null ? this.scoreManager.Score : this.fallbackScore;
+        Debug.Log("REEL SUCCESS (" + result + ") -> +" + gained + " points | Total: " + totalScore);
 
         target.Consume();
         this.RemoveFromRange(target);
@@ -264,5 +291,10 @@ public sealed class FishingHookController : MonoBehaviour
         }
 
         this.RemoveFromRange(hookable);
+    }
+
+    private bool IsGameRunning()
+    {
+        return this.gameFlowManager != null && this.gameFlowManager.CurrentState == GameState.Running;
     }
 }

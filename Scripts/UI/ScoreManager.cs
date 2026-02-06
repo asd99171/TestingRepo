@@ -28,8 +28,16 @@ using UnityEngine;
 
         public void AddScore(int basePoints)
         {
-            if (!IsScoringEnabled || basePoints <= 0)
+            if (!IsScoringEnabled || basePoints == 0)
             {
+                return;
+            }
+
+            if (basePoints < 0)
+            {
+                Score += basePoints;
+                ScoreChanged?.Invoke(Score);
+                ResetCombo();
                 return;
             }
 
