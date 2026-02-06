@@ -14,6 +14,7 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private RingQTEController qteController;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
+    [SerializeField] private CatchCounterManager catchCounterManager;
     [SerializeField] private GameFlowManager gameFlowManager;
 
     [Header("Player Horizontal Move")]
@@ -249,6 +250,19 @@ public sealed class FishingHookController : MonoBehaviour
         if (this.evidenceCounterManager != null && target.GrantsEvidence)
         {
             this.evidenceCounterManager.AddEvidence(target.EvidenceType);
+        }
+
+        if (this.catchCounterManager != null)
+        {
+            switch (target.ObjectType)
+            {
+                case HookableType.Trash:
+                    this.catchCounterManager.AddCatch(CatchType.Evidence);
+                    break;
+                case HookableType.Wildlife:
+                    this.catchCounterManager.AddCatch(CatchType.Fish);
+                    break;
+            }
         }
 
         int totalScore = this.scoreManager != null ? this.scoreManager.Score : this.fallbackScore;

@@ -103,6 +103,7 @@ public class GameFlowManager : MonoBehaviour
     public void RestartGame()
     {
         EndGame();
+        RiverSpawner.DespawnAllInScene();
         StartGame();
     }
 

@@ -201,12 +201,24 @@ public sealed class RiverSpawner : MonoBehaviour
     }
 
     // Called by RiverDespawn
-    public void NotifyDespawned()
+    public void NotifyDespawned(RiverDespawn despawn)
     {
-        this.aliveCount -= 1;
-        if (this.aliveCount < 0)
+        if (this.aliveCount > 0)
         {
-            this.aliveCount = 0;
+            this.aliveCount -= 1;
+        }
+    }
+
+    public static void DespawnAllInScene()
+    {
+        RiverDespawn[] despawns = FindObjectsOfType<RiverDespawn>();
+        for (int i = 0; i < despawns.Length; i++)
+        {
+            RiverDespawn despawn = despawns[i];
+            if (despawn != null)
+            {
+                despawn.DespawnNow();
+            }
         }
     }
 
