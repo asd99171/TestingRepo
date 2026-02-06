@@ -25,6 +25,11 @@ public sealed class RiverDriftMover : MonoBehaviour
 
     private void Awake()
     {
+        if (this.gameFlowManager == null)
+        {
+            this.gameFlowManager = FindObjectOfType<GameFlowManager>();
+        }
+
         float jitter = Random.Range(1f - this.speedJitterPercent, 1f + this.speedJitterPercent);
         this.velocity = this.baseVelocity * jitter;
 
