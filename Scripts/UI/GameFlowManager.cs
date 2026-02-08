@@ -16,6 +16,7 @@ public class GameFlowManager : MonoBehaviour
 
     private void Awake()
     {
+        EnsureRiverSpawners();
         if (timerManager != null)
         {
             timerManager.TimerEnded += HandleTimerEnded;
@@ -125,22 +126,17 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    public void DespawnAllHookables()
+    private void DespawnAllHookables()
     {
-        RiverSpawner[] spawners = riverSpawners;
-        if (spawners == null || spawners.Length == 0)
-        {
-            spawners = FindObjectsOfType<RiverSpawner>(true);
-        }
-
-        if (spawners == null || spawners.Length == 0)
+        EnsureRiverSpawners();
+        if (riverSpawners == null || riverSpawners.Length == 0)
         {
             return;
         }
 
-        for (int i = 0; i < spawners.Length; i++)
+        for (int i = 0; i < riverSpawners.Length; i++)
         {
-            RiverSpawner spawner = spawners[i];
+            RiverSpawner spawner = riverSpawners[i];
             if (spawner != null)
             {
                 spawner.DespawnAllActive();
@@ -152,5 +148,15 @@ public class GameFlowManager : MonoBehaviour
     {
         CurrentState = newState;
         StateChanged?.Invoke(CurrentState);
+    }
+
+    private void EnsureRiverSpawners()
+    {
+        if (riverSpawners != null && riverSpawners.Length > 0)
+        {
+            return;
+        }
+
+        riverSpawners = FindObjectsOfType<RiverSpawner>(true);
     }
 }
