@@ -26,3 +26,20 @@ The leaderboard HUD shows only the best score. To make it update:
    - The UI will render `Best: {score}` when the best score changes.
 
 If `LeaderboardManager` is not assigned to both the game flow and UI controllers, the best score text will not update.
+
+## Side quest mission system setup
+The side quest system spawns a mission every 15 seconds (50% chance) while the game is `Running`. The mission asks the player to catch the same random evidence type three times in a row. On success, the current score is multiplied by 2, the mission text turns green, and it fades out.
+
+1. **Add the manager**
+   - Create an empty GameObject (e.g., `SideQuestMissionManager`).
+   - Add the `SideQuestMissionManager` component.
+2. **Wire references**
+   - Assign the scene's `GameFlowManager`.
+   - Assign the scene's `EvidenceCounterManager`.
+   - Assign the scene's `ScoreManager`.
+   - Assign a `TextMeshProUGUI` object for the mission display.
+3. **UI text**
+   - Ensure the mission text object starts inactive or empty (the script will enable it when a mission starts).
+   - Adjust `Mission Check Interval Seconds`, `Mission Chance`, `Required Streak`, and `Success Fade Seconds` as needed in the inspector.
+
+If the game state is not `Running`, the side quest loop pauses and any active mission text is cleared.
