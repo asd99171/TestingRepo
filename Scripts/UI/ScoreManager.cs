@@ -3,7 +3,10 @@ using UnityEngine;
 
     public class ScoreManager : MonoBehaviour
     {
-        [SerializeField] private float comboIncreaseFactor = 1.25f;
+        [SerializeField] private float lightComboIncreaseFactor = 1.15f;
+        [SerializeField] private float mediumComboIncreaseFactor = 1.25f;
+        [SerializeField] private float heavyComboIncreaseFactor = 1.33f;
+        [SerializeField] private float anomalyComboIncreaseFactor = 1.75f;
         [SerializeField] private float maxComboMultiplier = 10f;
 
         public event Action<int> ScoreChanged;
@@ -26,7 +29,7 @@ using UnityEngine;
             ComboChanged?.Invoke(ComboMultiplier);
         }
 
-        public void AddScore(int basePoints)
+        public void AddScore(int basePoints, WeightClass weightClass = WeightClass.Light)
         {
             if (!IsScoringEnabled || basePoints == 0)
             {
@@ -45,6 +48,7 @@ using UnityEngine;
             Score += addedPoints;
             ScoreChanged?.Invoke(Score);
 
+            float comboIncreaseFactor = this.GetComboIncreaseFactor(weightClass);
             ComboMultiplier = Mathf.Min(ComboMultiplier * comboIncreaseFactor, maxComboMultiplier);
             ComboChanged?.Invoke(ComboMultiplier);
         }
@@ -53,5 +57,32 @@ using UnityEngine;
         {
             ComboMultiplier = 1f;
             ComboChanged?.Invoke(ComboMultiplier);
+        }
+
+        public void MultiplyScore(float multiplier)
+        {
+            if (!IsScoringEnabled)
+            {
+                return;
+            }
+
+            Score = Mathf.RoundToInt(Score * multiplier);
+            ScoreChanged?.Invoke(Score);
+        }
+
+        private float GetComboIncreaseFactor(WeightClass weightClass)
+        {
+            switch (weightClass)
+            {
+                case WeightClass.Medium:
+                    return this.mediumComboIncreaseFactor;
+                case WeightClass.Heavy:
+                    return this.heavyComboIncreaseFactor;
+                case WeightClass.Anomaly:
+                    return this.anomalyComboIncreaseFactor;
+                case WeightClass.Light:
+                default:
+                    return this.lightComboIncreaseFactor;
+            }
         }
     }

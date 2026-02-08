@@ -236,11 +236,16 @@ public sealed class FishingHookController : MonoBehaviour
         if (target.ObjectType == HookableType.Wildlife)
         {
             gained = -this.wildlifePenalty;
+            this.scoreManager?.ResetCombo();
         }
 
-        if (this.scoreManager != null)
+        if (gained == 0)
         {
-            this.scoreManager.AddScore(gained);
+            this.scoreManager?.ResetCombo();
+        }
+        else if (this.scoreManager != null)
+        {
+            this.scoreManager.AddScore(gained, target.WeightClass);
         }
         else
         {
