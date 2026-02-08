@@ -125,16 +125,22 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    private void DespawnAllHookables()
+    public void DespawnAllHookables()
     {
-        if (riverSpawners == null)
+        RiverSpawner[] spawners = riverSpawners;
+        if (spawners == null || spawners.Length == 0)
+        {
+            spawners = FindObjectsOfType<RiverSpawner>(true);
+        }
+
+        if (spawners == null || spawners.Length == 0)
         {
             return;
         }
 
-        for (int i = 0; i < riverSpawners.Length; i++)
+        for (int i = 0; i < spawners.Length; i++)
         {
-            RiverSpawner spawner = riverSpawners[i];
+            RiverSpawner spawner = spawners[i];
             if (spawner != null)
             {
                 spawner.DespawnAllActive();
