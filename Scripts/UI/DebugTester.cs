@@ -10,36 +10,36 @@ public class DebugTester : MonoBehaviour
 
     public void AddFish()
     {
-        scoreManager?.AddScore(FishPoints);
+        scoreManager?.AddScore(FishPoints, WeightClass.Light);
     }
 
     public void AddGunEvidence()
     {
-        scoreManager?.AddScore(FishPoints);
+        scoreManager?.AddScore(FishPoints, WeightClass.Light);
         evidenceCounterManager?.AddEvidence(EvidenceType.Gun);
     }
 
     public void AddGloveEvidence()
     {
-        scoreManager?.AddScore(FishPoints);
+        scoreManager?.AddScore(FishPoints, WeightClass.Light);
         evidenceCounterManager?.AddEvidence(EvidenceType.Glove);
     }
 
     public void AddBagEvidence()
     {
-        scoreManager?.AddScore(FishPoints);
+        scoreManager?.AddScore(FishPoints, WeightClass.Light);
         evidenceCounterManager?.AddEvidence(EvidenceType.Bag);
     }
 
     public void AddKnifeEvidence()
     {
-        scoreManager?.AddScore(FishPoints);
+        scoreManager?.AddScore(FishPoints, WeightClass.Light);
         evidenceCounterManager?.AddEvidence(EvidenceType.Knife);
     }
 
     public void AddFishCorpse()
     {
-        scoreManager?.AddScore(FishCorpsePoints);
+        scoreManager?.AddScore(FishCorpsePoints, WeightClass.Heavy);
         evidenceCounterManager?.AddEvidence(EvidenceType.Corpse);
     }
 
