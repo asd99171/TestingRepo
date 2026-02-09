@@ -61,6 +61,18 @@ public sealed class RingQTEController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool logResults = true;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteLoopClip;
+    [SerializeField] private float qteLoopFadeOutSeconds = 0.2f;
+
+    private Coroutine qteLoopFadeRoutine;
+    private AudioClip previousClip;
+    private bool previousLoop;
+    private float previousVolume;
+    private float previousTime;
+    private bool previousWasPlaying;
+
     private bool isActive;
     private Transform hookToFollow;
 
@@ -162,6 +174,8 @@ public sealed class RingQTEController : MonoBehaviour
         this.isActive = true;
         this.SetVisualsActive(true);
 
+        this.StartQteLoop();
+
         if (this.followHook)
         {
             this.UpdateFollow();
@@ -218,6 +232,7 @@ public sealed class RingQTEController : MonoBehaviour
 
         this.isActive = false;
 
+        this.StopQteLoop();
         this.SetVisualsActive(false);
         this.UnpauseGame();
 
@@ -315,6 +330,102 @@ public sealed class RingQTEController : MonoBehaviour
         if (this.ringRoot != null)
         {
             this.ringRoot.gameObject.SetActive(active);
+        }
+    }
+
+    private void StartQteLoop()
+    {
+        if (this.qteLoopClip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        if (this.qteLoopFadeRoutine != null)
+        {
+            this.StopCoroutine(this.qteLoopFadeRoutine);
+            this.qteLoopFadeRoutine = null;
+        }
+
+        this.previousClip = this.audioSource.clip;
+        this.previousLoop = this.audioSource.loop;
+        this.previousVolume = this.audioSource.volume;
+        this.previousTime = this.audioSource.time;
+        this.previousWasPlaying = this.audioSource.isPlaying;
+
+        this.audioSource.volume = 1f;
+        this.audioSource.clip = this.qteLoopClip;
+        this.audioSource.loop = true;
+        this.audioSource.Play();
+    }
+
+    private void StopQteLoop()
+    {
+        if (this.audioSource == null)
+        {
+            return;
+        }
+
+        if (!this.isActiveAndEnabled || !this.gameObject.activeInHierarchy)
+        {
+            this.audioSource.Stop();
+            this.audioSource.loop = false;
+            this.RestorePreviousAudio();
+            return;
+        }
+
+        if (this.qteLoopFadeRoutine != null)
+        {
+            this.StopCoroutine(this.qteLoopFadeRoutine);
+        }
+
+        this.qteLoopFadeRoutine = this.StartCoroutine(this.FadeOutQteLoop());
+    }
+
+    private System.Collections.IEnumerator FadeOutQteLoop()
+    {
+        float startVolume = this.audioSource != null ? this.audioSource.volume : 0f;
+        float duration = Mathf.Max(0.01f, this.qteLoopFadeOutSeconds);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            if (this.audioSource == null)
+            {
+                yield break;
+            }
+
+            float t = Mathf.Clamp01(elapsed / duration);
+            this.audioSource.volume = Mathf.Lerp(startVolume, 0f, t);
+            yield return null;
+        }
+
+        if (this.audioSource != null)
+        {
+            this.audioSource.Stop();
+            this.audioSource.loop = false;
+            this.audioSource.volume = startVolume;
+            this.RestorePreviousAudio();
+        }
+
+        this.qteLoopFadeRoutine = null;
+    }
+
+    private void RestorePreviousAudio()
+    {
+        if (this.audioSource == null)
+        {
+            return;
+        }
+
+        this.audioSource.clip = this.previousClip;
+        this.audioSource.loop = this.previousLoop;
+        this.audioSource.volume = this.previousVolume;
+        this.audioSource.time = this.previousTime;
+
+        if (this.previousWasPlaying && this.audioSource.clip != null)
+        {
+            this.audioSource.Play();
         }
     }
 
