@@ -10,6 +10,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private CatchCounterManager catchCounterManager;
+    [SerializeField] private AudioSettingsManager audioSettingsManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -28,6 +29,10 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameObject gameFlowPanel;
     [SerializeField] private Button startButton;
     [SerializeField] private Button endButton;
+    [SerializeField] private Button soundToggleButton;
+    [SerializeField] private Image soundToggleIcon;
+    [SerializeField] private Sprite soundOnSprite;
+    [SerializeField] private Sprite soundOffSprite;
 
     private void OnEnable()
     {
@@ -70,6 +75,11 @@ public class GameUIController : MonoBehaviour
         if (endButton != null)
         {
             endButton.onClick.AddListener(HandleEndButtonClicked);
+        }
+
+        if (soundToggleButton != null)
+        {
+            soundToggleButton.onClick.AddListener(HandleSoundToggleClicked);
         }
     }
 
@@ -115,6 +125,11 @@ public class GameUIController : MonoBehaviour
         {
             endButton.onClick.RemoveListener(HandleEndButtonClicked);
         }
+
+        if (soundToggleButton != null)
+        {
+            soundToggleButton.onClick.RemoveListener(HandleSoundToggleClicked);
+        }
     }
 
     private void Start()
@@ -155,6 +170,8 @@ public class GameUIController : MonoBehaviour
             HandleCatchCountChanged(CatchType.Evidence, catchCounterManager.EvidenceCount);
             HandleCatchCountChanged(CatchType.Corpse, catchCounterManager.CorpseCount);
         }
+
+        UpdateSoundToggleVisual();
     }
 
     private void HandleScoreChanged(int newScore)
@@ -281,10 +298,31 @@ public class GameUIController : MonoBehaviour
     private void HandleStartButtonClicked()
     {
         gameFlowManager?.StartGame();
+
+        if (startButton != null)
+        {
+            startButton.gameObject.SetActive(false);
+        }
     }
 
     private void HandleEndButtonClicked()
     {
         gameFlowManager?.EndGame();
+    }
+
+    private void HandleSoundToggleClicked()
+    {
+        audioSettingsManager?.ToggleMute();
+        UpdateSoundToggleVisual();
+    }
+
+    private void UpdateSoundToggleVisual()
+    {
+        if (soundToggleIcon == null || audioSettingsManager == null)
+        {
+            return;
+        }
+
+        soundToggleIcon.sprite = audioSettingsManager.IsMuted ? soundOffSprite : soundOnSprite;
     }
 }
