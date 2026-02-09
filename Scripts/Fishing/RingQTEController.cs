@@ -61,6 +61,10 @@ public sealed class RingQTEController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool logResults = true;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteStartClip;
+
     private bool isActive;
     private Transform hookToFollow;
 
@@ -161,6 +165,8 @@ public sealed class RingQTEController : MonoBehaviour
 
         this.isActive = true;
         this.SetVisualsActive(true);
+
+        this.PlayOneShot(this.qteStartClip);
 
         if (this.followHook)
         {
@@ -316,6 +322,16 @@ public sealed class RingQTEController : MonoBehaviour
         {
             this.ringRoot.gameObject.SetActive(active);
         }
+    }
+
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (clip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        this.audioSource.PlayOneShot(clip);
     }
 
     private RingQTEPreset GetPreset(WeightClass wc)
