@@ -59,6 +59,17 @@ using UnityEngine;
             ComboChanged?.Invoke(ComboMultiplier);
         }
 
+        public void MultiplyScore(float multiplier)
+        {
+            if (!IsScoringEnabled || Mathf.Approximately(multiplier, 1f))
+            {
+                return;
+            }
+
+            Score = Mathf.RoundToInt(Score * multiplier);
+            ScoreChanged?.Invoke(Score);
+        }
+
         private float GetComboIncreaseFactor(WeightClass weightClass)
         {
             switch (weightClass)

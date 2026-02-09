@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3914205914137107865}
   - component: {fileID: 115212916827650530}
   - component: {fileID: -5278787233662088548}
-  - component: {fileID: -8638962464202647328}
+  - component: {fileID: 2558512050296125202}
   m_Layer: 6
-  m_Name: fish
+  m_Name: crowbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,9 +80,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 5c8300a0cc0098c46ac92049978ff145, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 624cc4e11c07b204fb0bc3eed817a1de, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -149,11 +149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a328671ac424adb449e0505978d683d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 1
+  objectType: 0
   weightClass: 0
   baseScore: 100
-  grantsEvidence: 0
-  evidenceType: 0
+  grantsEvidence: 1
+  evidenceType: 3
   isHookable: 1
   spriteRenderer: {fileID: 8616214525165347185}
   highlightScaleMultiplier: 1.15
@@ -175,12 +175,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseVelocity: {x: -2, y: 0}
   speedJitterPercent: 0.2
-  bobAmplitude: 0.08
+  bobAmplitude: 0.001
   bobFrequency: 0
-  allowSpin: 0
-  spinDegPerSec: 40
+  allowSpin: 1
+  spinDegPerSec: 180
   gameFlowManager: {fileID: 0}
---- !u!50 &-8638962464202647328
+--- !u!50 &2558512050296125202
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0

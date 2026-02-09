@@ -166,7 +166,7 @@ public class GameUIController : MonoBehaviour
 
         if (currentScoreText != null)
         {
-            currentScoreText.text = $"Current: {newScore}";
+            currentScoreText.text = $"Your Score: {newScore}";
         }
     }
 
