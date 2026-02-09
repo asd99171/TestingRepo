@@ -28,7 +28,7 @@ The leaderboard HUD shows only the best score. To make it update:
 If `LeaderboardManager` is not assigned to both the game flow and UI controllers, the best score text will not update.
 
 ## Side quest mission system setup
-The side quest system spawns a mission every 15 seconds (50% chance) while the game is `Running`. The mission asks the player to catch the same random evidence type three times in a row. On success, the current score is doubled, the mission text turns green, and it fades out.
+The side quest system spawns a mission every 15 seconds (50% chance) while the game is `Running`. The mission asks the player to catch the same random evidence type three times in a row. On success, the current score is multiplied by 2, the mission text turns green, and it fades out.
 
 1. **Add the manager**
    - Create an empty GameObject (e.g., `SideQuestMissionManager`).
