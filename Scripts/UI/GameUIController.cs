@@ -10,7 +10,10 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private LeaderboardManager leaderboardManager;
     [SerializeField] private EvidenceCounterManager evidenceCounterManager;
     [SerializeField] private CatchCounterManager catchCounterManager;
+<<<<<<< HEAD
     [SerializeField] private AudioSettingsManager audioSettingsManager;
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentScoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -29,10 +32,13 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameObject gameFlowPanel;
     [SerializeField] private Button startButton;
     [SerializeField] private Button endButton;
+<<<<<<< HEAD
     [SerializeField] private Button soundToggleButton;
     [SerializeField] private Image soundToggleIcon;
     [SerializeField] private Sprite soundOnSprite;
     [SerializeField] private Sprite soundOffSprite;
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
 
     private void OnEnable()
     {
@@ -76,11 +82,14 @@ public class GameUIController : MonoBehaviour
         {
             endButton.onClick.AddListener(HandleEndButtonClicked);
         }
+<<<<<<< HEAD
 
         if (soundToggleButton != null)
         {
             soundToggleButton.onClick.AddListener(HandleSoundToggleClicked);
         }
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     }
 
     private void OnDisable()
@@ -125,11 +134,14 @@ public class GameUIController : MonoBehaviour
         {
             endButton.onClick.RemoveListener(HandleEndButtonClicked);
         }
+<<<<<<< HEAD
 
         if (soundToggleButton != null)
         {
             soundToggleButton.onClick.RemoveListener(HandleSoundToggleClicked);
         }
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     }
 
     private void Start()
@@ -170,8 +182,11 @@ public class GameUIController : MonoBehaviour
             HandleCatchCountChanged(CatchType.Evidence, catchCounterManager.EvidenceCount);
             HandleCatchCountChanged(CatchType.Corpse, catchCounterManager.CorpseCount);
         }
+<<<<<<< HEAD
 
         UpdateSoundToggleVisual();
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     }
 
     private void HandleScoreChanged(int newScore)
@@ -298,17 +313,21 @@ public class GameUIController : MonoBehaviour
     private void HandleStartButtonClicked()
     {
         gameFlowManager?.StartGame();
+<<<<<<< HEAD
 
         if (startButton != null)
         {
             startButton.gameObject.SetActive(false);
         }
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     }
 
     private void HandleEndButtonClicked()
     {
         gameFlowManager?.EndGame();
     }
+<<<<<<< HEAD
 
     private void HandleSoundToggleClicked()
     {
@@ -325,4 +344,6 @@ public class GameUIController : MonoBehaviour
 
         soundToggleIcon.sprite = audioSettingsManager.IsMuted ? soundOffSprite : soundOnSprite;
     }
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
 }

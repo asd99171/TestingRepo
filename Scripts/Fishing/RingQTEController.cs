@@ -58,8 +58,10 @@ public sealed class RingQTEController : MonoBehaviour
     [Header("Presets")]
     [SerializeField] private RingQTEPreset[] presets;
 
+<<<<<<< HEAD
     [Header("Debug")]
     [SerializeField] private bool logResults = true;
+<<<<<<< HEAD
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -67,6 +69,16 @@ public sealed class RingQTEController : MonoBehaviour
     [SerializeField] private float qteLoopFadeOutSeconds = 0.2f;
 
     private Coroutine qteLoopFadeRoutine;
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
+=======
+    [Header("Debug")]
+    [SerializeField] private bool logResults = true;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteStartClip;
+>>>>>>> parent of 9a458a3 (Merge pull request #24 from asd99171/codex/remove-ad-volume-control-and-add-toggle-button-9byk5u)
 
     private bool isActive;
     private Transform hookToFollow;
@@ -164,17 +176,34 @@ public sealed class RingQTEController : MonoBehaviour
 
         target.PlayHookHighlight();
 
+<<<<<<< HEAD
         this.PauseGame();
 
         this.isActive = true;
         this.SetVisualsActive(true);
 
+<<<<<<< HEAD
         this.StartQteLoop();
+
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
+        if (this.followHook)
+        {
+            this.UpdateFollow();
+        }
+=======
+        this.PauseGame();
+
+        this.isActive = true;
+        this.SetVisualsActive(true);
+
+        this.PlayOneShot(this.qteStartClip);
 
         if (this.followHook)
         {
             this.UpdateFollow();
         }
+>>>>>>> parent of 9a458a3 (Merge pull request #24 from asd99171/codex/remove-ad-volume-control-and-add-toggle-button-9byk5u)
     }
     
     public void Press()
@@ -237,8 +266,14 @@ public sealed class RingQTEController : MonoBehaviour
         {
             this.OnRingQTEResult(finishedTarget, result);
         }
+<<<<<<< HEAD
+<<<<<<< HEAD
 
         this.StopQteLoop();
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
+=======
+>>>>>>> parent of 9a458a3 (Merge pull request #24 from asd99171/codex/remove-ad-volume-control-and-add-toggle-button-9byk5u)
     }
 
     private void ApplyBandVisuals()
@@ -321,6 +356,7 @@ public sealed class RingQTEController : MonoBehaviour
         this.ringRoot.position = this.hookToFollow.position + this.worldOffset;
     }
 
+<<<<<<< HEAD
     private void SetVisualsActive(bool active)
     {
         if (this.ringRoot != null)
@@ -328,6 +364,7 @@ public sealed class RingQTEController : MonoBehaviour
             this.ringRoot.gameObject.SetActive(active);
         }
     }
+<<<<<<< HEAD
 
     private void StartQteLoop()
     {
@@ -391,6 +428,27 @@ public sealed class RingQTEController : MonoBehaviour
 
         this.qteLoopFadeRoutine = null;
     }
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
+=======
+    private void SetVisualsActive(bool active)
+    {
+        if (this.ringRoot != null)
+        {
+            this.ringRoot.gameObject.SetActive(active);
+        }
+    }
+
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (clip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        this.audioSource.PlayOneShot(clip);
+    }
+>>>>>>> parent of 9a458a3 (Merge pull request #24 from asd99171/codex/remove-ad-volume-control-and-add-toggle-button-9byk5u)
 
     private RingQTEPreset GetPreset(WeightClass wc)
     {

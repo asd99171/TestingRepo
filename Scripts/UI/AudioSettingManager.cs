@@ -1,9 +1,13 @@
 using UnityEngine;
+<<<<<<< HEAD
 using UnityEngine.InputSystem;
+=======
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
 
 public class AudioSettingsManager : MonoBehaviour
 {
     [SerializeField] private float defaultVolume = 1f;
+<<<<<<< HEAD
     [SerializeField] private bool requirePointerForVolumeChange = true;
 
     public float MasterVolume { get; private set; }
@@ -15,10 +19,19 @@ public class AudioSettingsManager : MonoBehaviour
     {
         lastNonMutedVolume = Mathf.Clamp01(defaultVolume);
         ApplyMasterVolume(defaultVolume);
+=======
+
+    public float MasterVolume { get; private set; }
+
+    private void Awake()
+    {
+        SetMasterVolume(defaultVolume);
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
     }
 
     public void SetMasterVolume(float volume)
     {
+<<<<<<< HEAD
         if (requirePointerForVolumeChange && !IsPointerPressed())
         {
             return;
@@ -62,3 +75,9 @@ public class AudioSettingsManager : MonoBehaviour
         return Pointer.current.press.isPressed;
     }
 }
+=======
+        MasterVolume = Mathf.Clamp01(volume);
+        AudioListener.volume = MasterVolume;
+    }
+}
+>>>>>>> parent of 8c59b99 (Play and fade QTE loop audio)
