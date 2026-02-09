@@ -61,6 +61,13 @@ public sealed class RingQTEController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool logResults = true;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteLoopClip;
+    [SerializeField] private float qteLoopFadeOutSeconds = 0.2f;
+
+    private Coroutine qteLoopFadeRoutine;
+
     private bool isActive;
     private Transform hookToFollow;
 
@@ -162,6 +169,8 @@ public sealed class RingQTEController : MonoBehaviour
         this.isActive = true;
         this.SetVisualsActive(true);
 
+        this.StartQteLoop();
+
         if (this.followHook)
         {
             this.UpdateFollow();
@@ -228,6 +237,8 @@ public sealed class RingQTEController : MonoBehaviour
         {
             this.OnRingQTEResult(finishedTarget, result);
         }
+
+        this.StopQteLoop();
     }
 
     private void ApplyBandVisuals()
@@ -316,6 +327,69 @@ public sealed class RingQTEController : MonoBehaviour
         {
             this.ringRoot.gameObject.SetActive(active);
         }
+    }
+
+    private void StartQteLoop()
+    {
+        if (this.qteLoopClip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        if (this.qteLoopFadeRoutine != null)
+        {
+            this.StopCoroutine(this.qteLoopFadeRoutine);
+            this.qteLoopFadeRoutine = null;
+        }
+
+        this.audioSource.volume = 1f;
+        this.audioSource.clip = this.qteLoopClip;
+        this.audioSource.loop = true;
+        this.audioSource.Play();
+    }
+
+    private void StopQteLoop()
+    {
+        if (this.audioSource == null)
+        {
+            return;
+        }
+
+        if (this.qteLoopFadeRoutine != null)
+        {
+            this.StopCoroutine(this.qteLoopFadeRoutine);
+        }
+
+        this.qteLoopFadeRoutine = this.StartCoroutine(this.FadeOutQteLoop());
+    }
+
+    private System.Collections.IEnumerator FadeOutQteLoop()
+    {
+        float startVolume = this.audioSource != null ? this.audioSource.volume : 0f;
+        float duration = Mathf.Max(0.01f, this.qteLoopFadeOutSeconds);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            if (this.audioSource == null)
+            {
+                yield break;
+            }
+
+            float t = Mathf.Clamp01(elapsed / duration);
+            this.audioSource.volume = Mathf.Lerp(startVolume, 0f, t);
+            yield return null;
+        }
+
+        if (this.audioSource != null)
+        {
+            this.audioSource.Stop();
+            this.audioSource.loop = false;
+            this.audioSource.volume = startVolume;
+        }
+
+        this.qteLoopFadeRoutine = null;
     }
 
     private RingQTEPreset GetPreset(WeightClass wc)
