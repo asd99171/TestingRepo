@@ -31,6 +31,13 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private int evidenceScore = 1;
     [SerializeField] private int corpseScore = 10;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteSuccessClip;
+    [SerializeField] private float qteSuccessFadeOutSeconds = 0.2f;
+
+    private Coroutine qteSuccessFadeRoutine;
+
     private readonly List<HookableObject> inRange = new List<HookableObject>();
     private int fallbackScore;
 
@@ -226,6 +233,8 @@ public sealed class FishingHookController : MonoBehaviour
             return;
         }
 
+        this.PlaySuccessClipWithFade();
+
         int gained = target.BaseScore;
 
         if (result == RingQTEResult.Perfect)
@@ -275,6 +284,62 @@ public sealed class FishingHookController : MonoBehaviour
 
         target.Consume();
         this.RemoveFromRange(target);
+    }
+
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (clip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        this.audioSource.PlayOneShot(clip);
+    }
+
+    private void PlaySuccessClipWithFade()
+    {
+        if (this.qteSuccessClip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        if (this.qteSuccessFadeRoutine != null)
+        {
+            this.StopCoroutine(this.qteSuccessFadeRoutine);
+        }
+
+        this.audioSource.volume = 1f;
+        this.audioSource.clip = this.qteSuccessClip;
+        this.audioSource.Play();
+        this.qteSuccessFadeRoutine = this.StartCoroutine(this.FadeOutQteSuccess());
+    }
+
+    private System.Collections.IEnumerator FadeOutQteSuccess()
+    {
+        float startVolume = this.audioSource != null ? this.audioSource.volume : 0f;
+        float duration = Mathf.Max(0.01f, this.qteSuccessFadeOutSeconds);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            if (this.audioSource == null)
+            {
+                yield break;
+            }
+
+            float t = Mathf.Clamp01(elapsed / duration);
+            this.audioSource.volume = Mathf.Lerp(startVolume, 0f, t);
+            yield return null;
+        }
+
+        if (this.audioSource != null)
+        {
+            this.audioSource.Stop();
+            this.audioSource.volume = startVolume;
+        }
+
+        this.qteSuccessFadeRoutine = null;
     }
 
     private void RemoveFromRange(HookableObject target)
