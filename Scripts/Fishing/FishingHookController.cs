@@ -31,6 +31,10 @@ public sealed class FishingHookController : MonoBehaviour
     [SerializeField] private int evidenceScore = 1;
     [SerializeField] private int corpseScore = 10;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip qteSuccessClip;
+
     private readonly List<HookableObject> inRange = new List<HookableObject>();
     private int fallbackScore;
 
@@ -226,6 +230,8 @@ public sealed class FishingHookController : MonoBehaviour
             return;
         }
 
+        this.PlayOneShot(this.qteSuccessClip);
+
         int gained = target.BaseScore;
 
         if (result == RingQTEResult.Perfect)
@@ -275,6 +281,16 @@ public sealed class FishingHookController : MonoBehaviour
 
         target.Consume();
         this.RemoveFromRange(target);
+    }
+
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (clip == null || this.audioSource == null)
+        {
+            return;
+        }
+
+        this.audioSource.PlayOneShot(clip);
     }
 
     private void RemoveFromRange(HookableObject target)
