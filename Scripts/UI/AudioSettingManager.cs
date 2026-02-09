@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AudioSettingsManager : MonoBehaviour
 {
     [SerializeField] private float defaultVolume = 1f;
-    [SerializeField] private bool ignoreExternalVolumeChanges = true;
+    [SerializeField] private bool requirePointerForVolumeChange = true;
 
     public float MasterVolume { get; private set; }
     public bool IsMuted { get; private set; }
@@ -18,7 +19,7 @@ public class AudioSettingsManager : MonoBehaviour
 
     public void SetMasterVolume(float volume)
     {
-        if (ignoreExternalVolumeChanges)
+        if (requirePointerForVolumeChange && !IsPointerPressed())
         {
             return;
         }
@@ -49,5 +50,15 @@ public class AudioSettingsManager : MonoBehaviour
         }
 
         IsMuted = Mathf.Approximately(MasterVolume, 0f);
+    }
+
+    private static bool IsPointerPressed()
+    {
+        if (Pointer.current == null)
+        {
+            return false;
+        }
+
+        return Pointer.current.press.isPressed;
     }
 }

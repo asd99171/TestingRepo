@@ -30,7 +30,9 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private Button startButton;
     [SerializeField] private Button endButton;
     [SerializeField] private Button soundToggleButton;
-    [SerializeField] private TextMeshProUGUI soundToggleText;
+    [SerializeField] private Image soundToggleIcon;
+    [SerializeField] private Sprite soundOnSprite;
+    [SerializeField] private Sprite soundOffSprite;
 
     private void OnEnable()
     {
@@ -169,7 +171,7 @@ public class GameUIController : MonoBehaviour
             HandleCatchCountChanged(CatchType.Corpse, catchCounterManager.CorpseCount);
         }
 
-        UpdateSoundToggleText();
+        UpdateSoundToggleVisual();
     }
 
     private void HandleScoreChanged(int newScore)
@@ -311,16 +313,16 @@ public class GameUIController : MonoBehaviour
     private void HandleSoundToggleClicked()
     {
         audioSettingsManager?.ToggleMute();
-        UpdateSoundToggleText();
+        UpdateSoundToggleVisual();
     }
 
-    private void UpdateSoundToggleText()
+    private void UpdateSoundToggleVisual()
     {
-        if (soundToggleText == null || audioSettingsManager == null)
+        if (soundToggleIcon == null || audioSettingsManager == null)
         {
             return;
         }
 
-        soundToggleText.text = audioSettingsManager.IsMuted ? "Sound Off" : "Sound On";
+        soundToggleIcon.sprite = audioSettingsManager.IsMuted ? soundOffSprite : soundOnSprite;
     }
 }

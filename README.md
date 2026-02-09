@@ -43,3 +43,18 @@ The side quest system spawns a mission every 15 seconds (50% chance) while the g
    - Adjust `Mission Check Interval Seconds`, `Mission Chance`, `Required Streak`, and `Success Fade Seconds` as needed in the inspector.
 
 If the game state is not `Running`, the side quest loop pauses and any active mission text is cleared.
+
+## Audio UI setup (slider + mute icon)
+The audio UI supports a slider for master volume and a toggle button that swaps between sound-on and sound-off icons.
+
+1. **Audio settings manager**
+   - Add `AudioSettingsManager` to a scene object.
+   - Assign the volume slider's `OnValueChanged` to `AudioSettingsManager.SetMasterVolume`.
+   - With the default `requirePointerForVolumeChange = true`, the slider only applies changes while a pointer (mouse/touch) is pressed.
+2. **Sound toggle button**
+   - In `GameUIController`, wire:
+     - `audioSettingsManager` to the scene's `AudioSettingsManager`.
+     - `soundToggleButton` to the UI button.
+     - `soundToggleIcon` to the button's `Image`.
+     - `soundOnSprite` and `soundOffSprite` to the desired icon assets (normal icon and icon with an X overlay).
+   - The button will swap the icon when mute is toggled.
